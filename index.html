@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Analysis Dashboard</title>
+    <!-- Google Fonts: Inter & Poppins -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Interactive Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- BACKGROUND ELEMENTS FOR GLASSMORPHISM -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginView" class="view-container active-view">
+        <div class="login-card glass-panel">
+            <div class="login-header">
+                <div class="logo-icon"><i class="fa-solid fa-compact-disc fa-spin-hover"></i></div>
+                <h1>Music Analysis</h1>
+                <p>Your Personalized Music Insights</p>
+            </div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="userName">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="userName" class="input-control" placeholder="Enter your name" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="userEmail">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" id="userEmail" class="input-control" placeholder="Enter your email"
+                            required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="userCountry">Country</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-globe"></i>
+                        <select id="userCountry" class="input-control" required>
+                            <option value="" disabled selected>Select your country</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="CA">Canada</option>
+                            <option value="IN">India</option>
+                            <option value="AU">Australia</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span>Enter Dashboard</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+            <div class="admin-link-container">
+                <a href="admin.html" class="admin-link">Admin Portal <i class="fa-solid fa-shield-halved"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD PAGE -->
+    <div id="dashboardView" class="view-container hidden">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon small"><i class="fa-solid fa-compact-disc"></i></div>
+                <h2>BeatMetrics</h2>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-category">Main Menu</li>
+                <li><a class="nav-item active" data-target="homeSection"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a class="nav-item" data-target="searchSection"><i class="fa-solid fa-magnifying-glass"></i>
+                        Discover</a></li>
+                <li class="nav-category">Library</li>
+                <li><a class="nav-item" data-target="songsSection"><i class="fa-solid fa-music"></i> Tracks</a></li>
+                <li><a class="nav-item" data-target="artistsSection"><i class="fa-solid fa-user-astronaut"></i>
+                        Artists</a></li>
+                <li><a class="nav-item" data-target="albumsSection"><i class="fa-solid fa-record-vinyl"></i> Albums</a>
+                </li>
+                <li><a class="nav-item" data-target="genresSection"><i class="fa-solid fa-guitar"></i> Genres</a></li>
+                <li class="nav-category">Community</li>
+                <li><a class="nav-item" data-target="usersSection"><i class="fa-solid fa-users"></i> Listeners</a></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar glass-panel">
+                <div class="topbar-left">
+                    <button class="icon-btn hamburger" id="mobileMenuBtn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="topbar-search">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" placeholder="Quick search...">
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="icon-btn notification-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <div class="topbar-user">
+                        <div class="user-info">
+                            <span id="displayUserName" class="user-name">Guest User</span>
+                            <span class="user-role">Premium</span>
+                        </div>
+                        <div class="avatar-placeholder" id="displayUserInitials">G</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <div class="content-scrollable">
+                <div class="section-title-container">
+                    <h2 id="currentSectionTitle">Home Overview</h2>
+                    <p id="currentSectionDesc">Welcome back! Here's your musical summary.</p>
+                </div>
+
+                <!-- 1. HOME SECTION -->
+                <section id="homeSection" class="section-view active">
+
+                    <!-- Top Stats Overview -->
+                    <div class="stats-grid">
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon purple"><i class="fa-solid fa-headphones"></i></div>
+                            <div class="stat-info">
+                                <h3>Total Streams</h3>
+                                <p id="statTotalStreams" class="counter">0</p>
+                            </div>
+                            <div class="stat-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +12%</div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon blue"><i class="fa-solid fa-music"></i></div>
+                            <div class="stat-info">
+                                <h3>Total Songs</h3>
+                                <p id="statTotalSongs" class="counter">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon teal"><i class="fa-solid fa-user-astronaut"></i></div>
+                            <div class="stat-info">
+                                <h3>Total Artists</h3>
+                                <p id="statTotalArtists" class="counter">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon pink"><i class="fa-solid fa-users"></i></div>
+                            <div class="stat-info">
+                                <h3>Total Users</h3>
+                                <p id="statTotalUsers" class="counter">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts & Insights Area -->
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card glass-panel col-span-2">
+                            <div class="card-header">
+                                <h3>Listening Trends (Weekly)</h3>
+                                <button class="icon-btn"><i class="fa-solid fa-ellipsis"></i></button>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="listeningTrendsChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-card glass-panel">
+                            <div class="card-header">
+                                <h3>Top Genres</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="genresDoughnutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Highlights Row -->
+                    <div class="highlights-grid">
+                        <div class="highlight-card gradient-1">
+                            <div class="hl-content">
+                                <h4>Top Song</h4>
+                                <h2 id="statMostPlayedSong">-</h2>
+                                <p>1.2k plays this week</p>
+                            </div>
+                            <i class="fa-solid fa-crown hl-icon"></i>
+                        </div>
+                        <div class="highlight-card gradient-2">
+                            <div class="hl-content">
+                                <h4>Top Artist</h4>
+                                <h2 id="statMostPlayedArtist">-</h2>
+                                <p>Trending globally</p>
+                            </div>
+                            <i class="fa-solid fa-fire hl-icon"></i>
+                        </div>
+                        <div class="highlight-card gradient-3">
+                            <div class="hl-content">
+                                <h4>Fav Album</h4>
+                                <h2 id="statFavAlbum">-</h2>
+                                <p>On repeat</p>
+                            </div>
+                            <i class="fa-solid fa-compact-disc hl-icon spin-slow"></i>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. DISCOVER (SEARCH) SECTION -->
+                <section id="searchSection" class="section-view">
+                    <div class="search-hero glass-panel">
+                        <h2>Find your next favorite track</h2>
+                        <div class="hero-search-bar">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="mainSearchInput"
+                                placeholder="Search by song, artist, album, or genre...">
+                            <button class="btn btn-primary">Search</button>
+                        </div>
+                        <div class="search-filters">
+                            <span class="filter-tag active">All</span>
+                            <span class="filter-tag">Tracks</span>
+                            <span class="filter-tag">Artists</span>
+                            <span class="filter-tag">Albums</span>
+                        </div>
+                    </div>
+                    <div id="searchResultsContainer" class="results-grid mt-4">
+                        <!-- Backend to populate search results here -->
+                        <div class="empty-state">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <p>Start typing to search our database.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. SONGS SECTION -->
+                <section id="songsSection" class="section-view">
+                    <div class="table-container glass-panel">
+                        <div class="table-header">
+                            <div class="table-actions">
+                                <div class="input-wrapper small">
+                                    <i class="fa-solid fa-search"></i>
+                                    <input type="text" placeholder="Filter songs..." class="input-control">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" id="btnAddSong"><i class="fa-solid fa-plus"></i> Add
+                                Track</button>
+                        </div>
+                        <div class="responsive-table">
+                            <table id="songsTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Track Info</th>
+                                        <th>Album</th>
+                                        <th>Plays</th>
+                                        <th>Length</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="songsTableBody">
+                                    <!-- Backend injection target for Songs -->
+                                    <tr class="placeholder-row">
+                                        <td colspan="6" class="text-center py-4">Waiting for backend data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination">
+                            <button class="icon-btn disabled"><i class="fa-solid fa-chevron-left"></i></button>
+                            <span class="page-indicator">Page 1 of 1</span>
+                            <button class="icon-btn disabled"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. ARTISTS SECTION -->
+                <section id="artistsSection" class="section-view">
+                    <div class="card-grid" id="artistsContainer">
+                        <!-- Backend injection target for Artists -->
+                    </div>
+                </section>
+
+                <!-- 5. ALBUMS SECTION -->
+                <section id="albumsSection" class="section-view">
+                    <div class="card-grid" id="albumsContainer">
+                        <!-- Backend injection target for Albums -->
+                    </div>
+                </section>
+
+                <!-- 6. GENRES SECTION -->
+                <section id="genresSection" class="section-view">
+                    <div class="genre-grid" id="genresContainer">
+                        <!-- Backend injection target for Genres -->
+                    </div>
+                </section>
+
+                <!-- 7. USERS SECTION -->
+                <section id="usersSection" class="section-view">
+                    <div class="table-container glass-panel">
+                        <div class="table-header">
+                            <h3>Listener Directory</h3>
+                            <button class="btn btn-outline"><i class="fa-solid fa-download"></i> Export</button>
+                        </div>
+                        <div class="responsive-table">
+                            <table id="usersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Listener</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                        <th>Joined Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <!-- Backend injection target for Users -->
+                                    <tr class="placeholder-row">
+                                        <td colspan="4" class="text-center py-4">Waiting for backend data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div> <!-- End Scrollable Content -->
+        </main>
+    </div>
+
+    <!-- FLOATING MUSIC PLAYER UI -->
+    <div id="floatingPlayer" class="floating-player glass-panel hidden">
+        <div class="player-track-info">
+            <div class="player-art"><i class="fa-solid fa-music"></i></div>
+            <div class="player-details">
+                <h4 id="playerTitle">No track playing</h4>
+                <p id="playerArtist">-</p>
+            </div>
+            <button class="icon-btn like-btn"><i class="fa-regular fa-heart"></i></button>
+        </div>
+        <div class="player-controls">
+            <div class="player-buttons">
+                <button class="icon-btn"><i class="fa-solid fa-backward-step"></i></button>
+                <button class="play-pause-btn" id="playPauseBtn"><i class="fa-solid fa-play"></i></button>
+                <button class="icon-btn"><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+            <div class="player-progress">
+                <span class="time current">0:00</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+                <span class="time total">0:00</span>
+            </div>
+        </div>
+        <div class="player-volume">
+            <i class="fa-solid fa-volume-high"></i>
+            <div class="volume-bar-container">
+                <div class="volume-bar" style="width: 70%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JS -->
+    <script src="js/app.js"></script>
+</body>
+
+</html>
