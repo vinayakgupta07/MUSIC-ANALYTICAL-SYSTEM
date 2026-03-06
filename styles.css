@@ -1,6 +1,4 @@
-/* styles.css - Main Stylesheet */
 
-/* CSS Variables */
 :root {
     --bg-color: #f0f4f8;
     --surface-color: rgba(255, 255, 255, 0.75);
@@ -63,7 +61,7 @@ a {
     color: inherit;
 }
 
-/* Background Shapes for Glassmorphism */
+/* Background Shapes for Glass */
 .bg-shape {
     position: fixed;
     border-radius: 50%;
@@ -296,7 +294,7 @@ a {
     min-height: 100vh;
 }
 
-/* --- LOGIN VIEW --- */
+/*  LOGIN VIEW */
 #loginView {
     display: flex;
     align-items: center;
@@ -811,7 +809,7 @@ a {
     }
 }
 
-/* --- SECTIONS UI --- */
+/*  SECTIONS UI  */
 
 /* Home Section */
 .stats-grid {
@@ -1793,4 +1791,5 @@ tr:hover .action-bar {
 
 .text-danger i {
     color: var(--danger-color) !important;
+
 }
