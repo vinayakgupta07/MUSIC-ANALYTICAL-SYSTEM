@@ -1,5 +1,5 @@
 Music Analytics System
-📌 Overview
+ Overview
 
 The Music Analytics System is a full-stack web application that analyzes music data and provides meaningful insights through an interactive dashboard. It allows users to explore trends, visualize statistics, and gain deeper understanding of music-related datasets.
 
