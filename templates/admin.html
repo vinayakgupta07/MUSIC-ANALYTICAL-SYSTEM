@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatMetrics Admin Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body class="admin-theme">
+
+    <div class="admin-layout">
+
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon admin-color"><i class="fa-solid fa-shield-halved"></i></div>
+                <h2>Admin Portal</h2>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-category">System</li>
+                <li><a class="nav-item active" data-target="overviewSection">
+                    <i class="fa-solid fa-chart-line"></i> Overview</a></li>
+
+                <li class="nav-category">Management</li>
+                <li><a class="nav-item" data-target="manageUsersSection">
+                    <i class="fa-solid fa-users-gear"></i> Manage Users</a></li>
+                <li><a class="nav-item" data-target="manageContentSection">
+                    <i class="fa-solid fa-database"></i> Content Database</a></li>
+
+                <li class="nav-category">Security</li>
+                <li><a class="nav-item" data-target="logsSection">
+                    <i class="fa-solid fa-file-shield"></i> Audit Logs</a></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('home') }}" class="logout-btn back-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back to App
+                </a>
+            </div>
+        </aside>
+
+        <!-- Admin Main Content -->
+        <main class="admin-main">
+
+            <!-- Topbar -->
+            <header class="admin-topbar">
+                <div class="topbar-left">
+                    <button class="icon-btn hamburger" id="mobileMenuBtn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h2 class="page-title" id="adminPageTitle">System Overview</h2>
+                </div>
+                <div class="topbar-right">
+                    <div class="status-indicator">
+                        <span class="pulse-dot"></span>
+                        <span class="status-text">System Online</span>
+                    </div>
+                    <button class="icon-btn warning-badge">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </button>
+                    <div class="admin-profile">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Admin" alt="Admin" class="admin-avatar">
+                        <div class="admin-info">
+                            <span class="admin-name">Super Admin</span>
+                            <span class="admin-role">System Operations</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="admin-content-scrollable">
+
+                <!-- ── 1. OVERVIEW SECTION ──────────────────────────────────── -->
+                <section id="overviewSection" class="admin-section active">
+
+                    <!-- KPI Cards — IDs must match admin.js setKPI() calls -->
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <h3>Total Accounts</h3>
+                                <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+                            </div>
+                            <div class="kpi-value" id="kpiTotalUsers">—</div>
+                            <div class="kpi-footer text-success"><i class="fa-solid fa-arrow-up"></i> Live from DB</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <h3>Total Streams</h3>
+                                <div class="kpi-icon warning"><i class="fa-solid fa-wave-square"></i></div>
+                            </div>
+                            <div class="kpi-value" id="kpiStreams">—</div>
+                            <div class="kpi-footer text-warning"><i class="fa-solid fa-minus"></i> All-time plays</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <h3>Total Songs</h3>
+                                <div class="kpi-icon info"><i class="fa-solid fa-music"></i></div>
+                            </div>
+                            <div class="kpi-value" id="kpiSongs">—</div>
+                            <div class="kpi-footer text-danger"><i class="fa-solid fa-database"></i> In catalogue</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <h3>Total Artists</h3>
+                                <div class="kpi-icon success"><i class="fa-solid fa-user-astronaut"></i></div>
+                            </div>
+                            <div class="kpi-value" id="kpiArtists">—</div>
+                            <div class="kpi-footer text-success"><i class="fa-solid fa-arrow-up"></i> Registered</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="admin-card growth-chart-card">
+                            <div class="card-header">
+                                <h3>Daily Listening Trends</h3>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="adminGrowthChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <h3>Plays by Genre</h3>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="trafficDonutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ── 2. MANAGE USERS SECTION ─────────────────────────────── -->
+                <section id="manageUsersSection" class="admin-section">
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3>User Database</h3>
+                            <div class="actions-group">
+                                <input type="text" class="dark-input" id="userSearchInput" placeholder="Search name or email…">
+                                <button class="btn btn-sm btn-primary" id="btnFilterUsers">
+                                    <i class="fa-solid fa-filter"></i> Filter
+                                </button>
+                                <button class="btn btn-sm btn-primary" id="btnAddUser">
+                                    <i class="fa-solid fa-user-plus"></i> Add User
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Country</th>
+                                        <th>Joined</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <!-- Rows injected by admin.js renderUsersTable() -->
+                                <tbody id="adminUsersTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">Loading from database…</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── 3. MANAGE CONTENT SECTION ──────────────────────────── -->
+                <section id="manageContentSection" class="admin-section">
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3>Master Song Database</h3>
+                            <button class="btn btn-sm btn-primary" id="btnUploadTracks">
+                                <i class="fa-solid fa-plus"></i> Upload Bulk Tracks
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Track ID</th>
+                                        <th>Title</th>
+                                        <th>Artist</th>
+                                        <th>Album</th>
+                                        <th>Total Streams</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <!-- Rows injected by admin.js renderSongsTable() -->
+                                <tbody id="adminSongsTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">Loading from database…</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── 4. LOGS SECTION ────────────────────────────────────── -->
+                <section id="logsSection" class="admin-section">
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3>System Audit Logs</h3>
+                            <button class="btn btn-sm btn-outline" id="btnExportCSV">
+                                <i class="fa-solid fa-download"></i> Export CSV
+                            </button>
+                        </div>
+                        <div class="terminal-window">
+                            <div class="terminal-header">syslog.log</div>
+                            <div class="terminal-body" id="sysLogContainer">
+                                <div class="log-line"><span class="log-time">[10:45:01]</span> <span class="log-type info">INFO:</span> Admin "Super Admin" logged in from IP 192.168.1.104</div>
+                                <div class="log-line"><span class="log-time">[10:47:22]</span> <span class="log-type warning">WARN:</span> High API latency detected on /api/v1/songs/search (450ms)</div>
+                                <div class="log-line"><span class="log-time">[10:48:10]</span> <span class="log-type error">ERROR:</span> Failed to authenticate user id=9484. Invalid token.</div>
+                                <div class="log-line"><span class="log-time">[10:50:00]</span> <span class="log-type success">SUCCESS:</span> Database automated backup completed. Size: 42.8GB.</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Global Admin Modal -->
+    <div id="adminModal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">Admin Action</h3>
+                <button class="icon-btn" onclick="adminUI.closeModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Admin Toast Container -->
+    <div id="adminToastContainer" class="toast-container"></div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+
+</html>
